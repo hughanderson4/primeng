@@ -11,11 +11,11 @@ import {ObjectUtils} from '../utils/objectutils';
         <div [class]="styleClass" [ngStyle]="style" [ngClass]="{'ui-picklist ui-widget ui-helper-clearfix': true,'ui-picklist-responsive': responsive}">
             <div class="ui-picklist-source-controls ui-picklist-buttons" *ngIf="showSourceControls">
                 <div class="ui-picklist-buttons-cell">
-                    <button type="button" pButton icon="fa-angle-up" [disabled]="disabled" (click)="moveUp(sourcelist,source,selectedItemsSource,onSourceReorder)"></button>
-                    <button type="button" pButton icon="fa-angle-double-up" [disabled]="disabled" (click)="moveTop(sourcelist,source,selectedItemsSource,onSourceReorder)"></button>
-                    <button type="button" pButton icon="fa-angle-down" [disabled]="disabled" (click)="moveDown(sourcelist,source,selectedItemsSource,onSourceReorder)"></button>
-                    <button type="button" pButton icon="fa-angle-double-down" [disabled]="disabled" (click)="moveBottom(sourcelist,source,selectedItemsSource,onSourceReorder)"></button>
-                </div>
+                <button type="button" pButton icon="fa-angle-up" [disabled]="disabled" (click)="moveUp(sourcelist,source,selectedItemsSource,onSourceReorder)"></button>
+                <button type="button" pButton icon="fa-angle-double-up" [disabled]="disabled" (click)="moveTop(sourcelist,source,selectedItemsSource,onSourceReorder)"></button>
+                <button type="button" pButton icon="fa-angle-down" [disabled]="disabled" (click)="moveDown(sourcelist,source,selectedItemsSource,onSourceReorder)"></button>
+                <button type="button" pButton icon="fa-angle-double-down" [disabled]="disabled" (click)="moveBottom(sourcelist,source,selectedItemsSource,onSourceReorder)"></button>
+            </div>
             </div>
             <div class="ui-picklist-listwrapper ui-picklist-source-wrapper" [ngClass]="{'ui-picklist-listwrapper-nocontrols':!showSourceControls}">
                 <div class="ui-picklist-caption ui-widget-header ui-corner-tl ui-corner-tr" *ngIf="sourceHeader">{{sourceHeader}}</div>
@@ -69,11 +69,11 @@ import {ObjectUtils} from '../utils/objectutils';
             </div>
             <div class="ui-picklist-target-controls ui-picklist-buttons" *ngIf="showTargetControls">
                 <div class="ui-picklist-buttons-cell">
-                    <button type="button" pButton icon="fa-angle-up" [disabled]="disabled" (click)="moveUp(targetlist,target,selectedItemsTarget,onTargetReorder)"></button>
-                    <button type="button" pButton icon="fa-angle-double-up" [disabled]="disabled" (click)="moveTop(targetlist,target,selectedItemsTarget,onTargetReorder)"></button>
-                    <button type="button" pButton icon="fa-angle-down" [disabled]="disabled" (click)="moveDown(targetlist,target,selectedItemsTarget,onTargetReorder)"></button>
-                    <button type="button" pButton icon="fa-angle-double-down" [disabled]="disabled" (click)="moveBottom(targetlist,target,selectedItemsTarget,onTargetReorder)"></button>
-                </div>
+                <button type="button" pButton icon="fa-angle-up" [disabled]="disabled" (click)="moveUp(targetlist,target,selectedItemsTarget,onTargetReorder)"></button>
+                <button type="button" pButton icon="fa-angle-double-up" [disabled]="disabled" (click)="moveTop(targetlist,target,selectedItemsTarget,onTargetReorder)"></button>
+                <button type="button" pButton icon="fa-angle-down" [disabled]="disabled" (click)="moveDown(targetlist,target,selectedItemsTarget,onTargetReorder)"></button>
+                <button type="button" pButton icon="fa-angle-double-down" [disabled]="disabled" (click)="moveBottom(targetlist,target,selectedItemsTarget,onTargetReorder)"></button>
+            </div>
             </div>
         </div>
     `,
@@ -320,8 +320,14 @@ export class PickList implements AfterViewChecked,AfterContentInit {
         this.itemTouched = true;
     }
 
+    private sortByIndexInList(items: any[], list: any) {
+        return items.sort((item1, item2) =>
+            this.findIndexInList(item1, list) - this.findIndexInList(item2, list));
+    }
+
     moveUp(listElement, list, selectedItems, callback) {
         if(selectedItems && selectedItems.length) {
+            selectedItems = this.sortByIndexInList(selectedItems, list);
             for(let i = 0; i < selectedItems.length; i++) {
                 let selectedItem = selectedItems[i];
                 let selectedItemIndex: number = this.findIndexInList(selectedItem, list);
@@ -345,6 +351,7 @@ export class PickList implements AfterViewChecked,AfterContentInit {
 
     moveTop(listElement, list, selectedItems, callback) {
         if(selectedItems && selectedItems.length) {
+            selectedItems = this.sortByIndexInList(selectedItems, list);
             for(let i = 0; i < selectedItems.length; i++) {
                 let selectedItem = selectedItems[i];
                 let selectedItemIndex: number = this.findIndexInList(selectedItem, list);
@@ -365,6 +372,7 @@ export class PickList implements AfterViewChecked,AfterContentInit {
 
     moveDown(listElement, list, selectedItems, callback) {
         if(selectedItems && selectedItems.length) {
+            selectedItems = this.sortByIndexInList(selectedItems, list);
             for(let i = selectedItems.length - 1; i >= 0; i--) {
                 let selectedItem = selectedItems[i];
                 let selectedItemIndex: number = this.findIndexInList(selectedItem, list);
@@ -388,6 +396,7 @@ export class PickList implements AfterViewChecked,AfterContentInit {
 
     moveBottom(listElement, list, selectedItems, callback) {
         if(selectedItems && selectedItems.length) {
+            selectedItems = this.sortByIndexInList(selectedItems, list);
             for(let i = selectedItems.length - 1; i >= 0; i--) {
                 let selectedItem = selectedItems[i];
                 let selectedItemIndex: number = this.findIndexInList(selectedItem, list);
